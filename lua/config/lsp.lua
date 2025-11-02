@@ -24,6 +24,9 @@ vim.lsp.config('lua_ls', {
 
 vim.lsp.enable('lua_ls')
 
+-- Configure jdtls (Java Language Server)
+vim.lsp.enable('jdtls')
+
 -- Setup autocompletion on LSP attach
 vim.api.nvim_create_autocmd('LspAttach', {
   callback = function(ev)
