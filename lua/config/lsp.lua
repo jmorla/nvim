@@ -31,6 +31,14 @@ vim.lsp.enable('jdtls')
 vim.api.nvim_create_autocmd('LspAttach', {
   callback = function(ev)
     local client = vim.lsp.get_client_by_id(ev.data.client_id)
+
+    -- LSP Navigation keybindings
+    vim.keymap.set('n', 'gd', vim.lsp.buf.definition, { buffer = ev.buf, noremap = true })
+    vim.keymap.set('n', 'gD', vim.lsp.buf.declaration, { buffer = ev.buf, noremap = true })
+    vim.keymap.set('n', 'gi', vim.lsp.buf.implementation, { buffer = ev.buf, noremap = true })
+    vim.keymap.set('n', 'gr', vim.lsp.buf.references, { buffer = ev.buf, noremap = true })
+    vim.keymap.set('n', 'K', vim.lsp.buf.hover, { buffer = ev.buf, noremap = true })
+
     if client:supports_method('textDocument/completion') then
       vim.opt.completeopt = { 'menu', 'menuone', 'noinsert', 'fuzzy' }
       vim.lsp.completion.enable(true, client.id, ev.buf, { autotrigger = true })
