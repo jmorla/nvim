@@ -32,53 +32,10 @@ vim.g.maplocalleader = "\\"
 
 -- Setup lazy.nvim
 require("lazy").setup({
-    spec = {
-        { "catppuccin/nvim", name = "catppuccin", priority = 1000 },
-        { 'nvim-telescope/telescope.nvim', tag = '0.1.8', dependencies = { 'nvim-lua/plenary.nvim' }},
-        {"nvim-treesitter/nvim-treesitter", branch = 'master', lazy = false, build = ":TSUpdate"},
-        {
-            "nvim-neo-tree/neo-tree.nvim",
-            branch = "v3.x",
-            dependencies = {
-                "nvim-lua/plenary.nvim",
-                "MunifTanjim/nui.nvim",
-                "nvim-tree/nvim-web-devicons"
-            },
-            lazy = false,
-        },
-        {
-            'nvim-lualine/lualine.nvim', dependencies = { 'nvim-tree/nvim-web-devicons' }
-        }
-
-    },
+    spec = { { import = "plugins" } },
     -- Configure any other settings here. See the documentation for more details.
     -- colorscheme that will be used when installing plugins.
     install = { colorscheme = { "habamax" } },
     -- automatically check for plugin updates
     checker = { enabled = true },
 })
-
--- Setup Catppuccin
-require("catppuccin").setup()
-vim.cmd.colorscheme "catppuccin"
-
--- Setup Telescope
-local builtin = require('telescope.builtin')
-vim.keymap.set('n', '<leader>ff', builtin.find_files, { desc = 'Telescope find files' })
-vim.keymap.set('n', '<leader>fg', builtin.live_grep, { desc = 'Telescope live grep' })
-vim.keymap.set('n', '<leader>fb', builtin.buffers, { desc = 'Telescope buffers' })
-vim.keymap.set('n', '<leader>fh', builtin.help_tags, { desc = 'Telescope help tags' })
-
--- Setup Treesitter
-require('nvim-treesitter.configs').setup {
-    ensure_installed = {"java", "c", "lua", "vim", "vimdoc", "query", "markdown", "markdown_inline", "sql", "javascript", "typescript", "html", "xml", "json"},
-    sync_install = false,
-    auto_install = true,
-    highlight = { enable = true },
-    indent = {enable = true }
-}
-
-vim.keymap.set('n', '<C-n>', ':Neotree filesystem toggle left<CR>')
-
--- Setup Lualine
-require('lualine').setup()
