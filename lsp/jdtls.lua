@@ -1,3 +1,4 @@
+local jdtls = require('jdtls')
 local mason_bin = vim.fn.expand('~/.local/share/nvim/mason/bin/')
 local jdtls_install = vim.fn.expand('~/.local/share/nvim/mason/packages/jdtls')
 
@@ -6,14 +7,14 @@ local home = os.getenv('HOME')
 local workspace_dir = home .. '/.cache/jdtls-workspace'
 vim.fn.mkdir(workspace_dir, 'p')
 
-return {
+local config = {
   cmd = {
     'java',
     '-Declipse.application=org.eclipse.jdt.ls.core.id1',
     '-Dosgi.bundles.defaultStartLevel=4',
     '-Declipse.product=org.eclipse.jdt.ls.core.product',
     '-Dlog.protocol=true',
-    '-Dlog.level=ALL',
+    '-Dlog.level=WARNING',
     '-Xms1g',
     '-Xmx2g',
     '-javaagent:' .. jdtls_install .. '/lombok.jar',
@@ -24,8 +25,6 @@ return {
 
   filetypes = { 'java' },
 
-  root_markers = { '.git', 'pom.xml', 'build.gradle', 'build.gradle.kts' },
-
   settings = {
     java = {
       eclipse = {
@@ -33,7 +32,17 @@ return {
       },
       configuration = {
         updateBuildConfiguration = 'interactive',
-        runtimes = {},
+        runtimes = {
+          {
+            name = 'JavaSE-25',
+            path = home .. '/.sdkman/candidates/java/25-graal',
+            default = true,
+          },
+          {
+            name = 'JavaSE-24',
+            path = home .. '/.sdkman/candidates/java/24.0.2-graal',
+          },
+        },
       },
       maven = {
         downloadSources = true,
@@ -50,10 +59,20 @@ return {
       format = {
         enabled = true,
       },
+      completion = {
+        enabled = true,
+        favoriteStaticMembers = {},
+      },
     },
   },
 
   init_options = {
     bundles = {},
+    extendedClientCapabilities = {
+      resolveAdditionalTextEditsSupport = true,
+      classFileContentsSupport = true,
+    },
   },
 }
+
+return config

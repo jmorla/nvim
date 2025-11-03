@@ -24,8 +24,22 @@ vim.lsp.config('lua_ls', {
 
 vim.lsp.enable('lua_ls')
 
--- Configure jdtls (Java Language Server)
-vim.lsp.enable('jdtls')
+-- Setup Java with nvim-jdtls
+vim.api.nvim_create_autocmd('FileType', {
+  pattern = 'java',
+  callback = function(ev)
+    local jdtls = require('jdtls')
+    local jdtls_config_path = vim.fn.stdpath('config') .. '/lsp/jdtls.lua'
+    local jdtls_config = dofile(jdtls_config_path)
+
+    -- Set root_dir dynamically based on current file location
+    jdtls_config.root_dir = vim.fs.root(0, { '.git', 'pom.xml', 'build.gradle', 'build.gradle.kts' })
+      or vim.fn.getcwd()
+
+    -- Start or attach to jdtls
+    jdtls.start_or_attach(jdtls_config)
+  end,
+})
 
 -- Setup autocompletion on LSP attach
 vim.api.nvim_create_autocmd('LspAttach', {
